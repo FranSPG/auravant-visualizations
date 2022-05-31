@@ -40,19 +40,18 @@ def stand_ins_name(df_query) -> pd.DataFrame:
     csv_stand_path = abs_dir + os.sep + 'files_validation' + os.sep + 'nombre_closest_match_2022-05-21 15:35:21.csv'
     df_stand = pd.read_csv(csv_stand_path, index_col=0)
 
-    df_query.loc[:, 'nombre'] = synonymous_replacements(df_query['nombre'])
+    df_query.loc[:, 'insumo_vecino'] = synonymous_replacements(df_query['insumo_vecino'])
 
-    for ins in df_query['nombre'].unique():
+    for ins in df_query['insumo_vecino'].unique():
         try:
             stand_name = df_stand.loc[df_stand['nombre'] == ins, 'nombre_alpha_closest_match'].values[0]
-            df_query.loc[df_query['nombre'] == ins, 'insumo_nombre_stand'] = stand_name
+            df_query.loc[df_query['insumo_vecino'] == ins, 'insumo_vecino_stand'] = stand_name
         except:
             pass
-    df_query.loc[df_query['insumo_nombre_stand'].isna(),
-                 'insumo_nombre_stand'] = df_query.loc[df_query['insumo_nombre_stand'].isna(),
-                                                       'nombre']
+    df_query.loc[df_query['insumo_vecino_stand'].isna(),
+                 'insumo_vecino_stand'] = df_query.loc[df_query['insumo_vecino_stand'].isna(),
+                                                       'insumo_vecino']
     return df_query
-
 
 def validate_dosis(df_query) -> pd.DataFrame:
     """
@@ -116,7 +115,7 @@ def get_only_alpha(string) -> str:
 
 def synonymous_replacements(column: pd.Series) -> pd.Series:
     synonymous = {
-        "dap": "fosfato diamónico",
+        "dap": "fosfato diamonico",
         "Fosfato Monoamónico (MAP)": "fosfato monoamónico"
     }
 
